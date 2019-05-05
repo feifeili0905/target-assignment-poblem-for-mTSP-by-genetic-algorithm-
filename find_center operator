@@ -1,0 +1,11 @@
+function [xyz,center_index] = find_center(xyz)
+N = length(xyz(:,1));
+for iN = 1:N
+    distance(iN) = 0;
+    for in = 1:N
+        distance(iN) = sum((xyz(iN,:)-xyz(in,:)).^2) + distance(iN);
+    end
+end
+[ignore,center_index] = min(distance);
+xyz = [xyz(center_index,:); xyz(1:(center_index-1),:) ;xyz((center_index+1):end,:)];
+end
