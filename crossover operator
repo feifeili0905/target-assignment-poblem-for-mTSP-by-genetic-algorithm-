@@ -1,0 +1,30 @@
+function offsets = crossover_op(parent)
+		% --== CROSSOVER ==--
+		r = randperm(lbestch);
+		s_men = r(1:2); % salesmen selected for crossover
+		if sum(cellfun(@length, parent.ch)) < length(xy)-1
+			disp('Not enough location!');
+		end
+		M1 = length(parent.ch{s_men(1)});
+		M2 = length(parent.ch{s_men(2)});
+		if M1>1
+			rr = randperm(M1-1);
+		else
+			rr = 1;
+		end
+		cp(1) = rr(1); % point of the crossover in the first salesman
+		q1 = max(1,cp(1)-M1+min_tour); % lower bound of the crossover point for the second salesman
+		q2 = min(M2,cp(1)+M2-min_tour); % upper bound of the crossover point for the second salesman
+		rr = q1-1+randperm(q2-q1+1);
+		cp(2) = rr(1);
+		tempseq1 = parent.ch{s_men(1)}(cp(1)+1:end);
+		
+		offsets = cell(1,3);
+		offsets{1} = s_men;
+		if (rand <= merging_prob) % Merges the two salesmen into a single one
+			offsets{2} = [parent.ch{s_men(1)} parent.ch{s_men(2)}];
+		else
+			offsets{2} = [parent.ch{s_men(1)}(1:cp(1)) parent.ch{s_men(2)}(cp(2)+1:end)];
+			offsets{3} = [parent.ch{s_men(2)}(1:cp(2)) tempseq1];
+		end
+    end
