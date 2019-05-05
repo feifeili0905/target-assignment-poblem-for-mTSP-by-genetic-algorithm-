@@ -1,0 +1,14 @@
+    function breaks = randbreaks(min_tour,cum_prob,num_brks,n)
+        if min_tour == 1 % No Constraints on Breaks
+            tmp_brks = randperm(n-1);
+            breaks = sort(tmp_brks(1:num_brks));
+        else % Force Breaks to be at Least the Minimum Tour Length
+            num_adjust = find(rand < cum_prob,1)-1;
+            spaces = ceil(num_brks*rand(1,num_adjust));
+            adjust = zeros(1,num_brks);
+            for kk = 1:num_brks
+                adjust(kk) = sum(spaces == kk);
+            end
+            breaks = min_tour*(1:num_brks) + cumsum(adjust);
+        end
+	end
